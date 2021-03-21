@@ -5,7 +5,7 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
-  max-width: 1440px;
+  max-width: calc(1440px + 2rem);
   margin: 0 auto;
   padding: 1rem;
 
@@ -34,7 +34,7 @@ export const Grid = styled.div`
 
 export const Button = styled.button`
   height: 3.75rem;
-  width: 12.5rem;
+  width: 14.5rem;
   border-radius: 8px;
   background-color: var(--primary);
   color: var(--text);

@@ -5,11 +5,18 @@ interface LoginCredentials {
   email: string;
   password: string;
 }
+
+interface GroupData {
+  name: string;
+  id: string;
+  group_id: string;
+}
 interface UserData {
   email: string;
   name: string;
-  group?: string | null;
+  group: GroupData | null;
   avatar?: string | null;
+  id: string;
 }
 interface AuthState {
   token: string;
@@ -26,6 +33,7 @@ interface ContextData {
   signIn(credentials: LoginCredentials): Promise<void>;
   signOut(): void;
   signUp(credentials: any): Promise<ResponseData>;
+  updateUser(credentials: any): void;
 }
 
 export const AuthContext = createContext<ContextData>({} as ContextData);
@@ -36,6 +44,8 @@ export const AuthProvider: React.FC = ({ children }) => {
     const user = localStorage.getItem("gofinance:user");
 
     if (token && user) {
+      api.defaults.headers.authorization = "Bearer " + token;
+
       return { token, user: JSON.parse(user) };
     }
     return {} as AuthState;
@@ -54,12 +64,14 @@ export const AuthProvider: React.FC = ({ children }) => {
         name: response.data.user.username,
         group: response.data.user.group,
         avatar: response.data.user.avatar,
+        id: response.data.user.id,
       };
       const token = response.data.jwt;
       setData({ token: token, user: user });
 
       localStorage.setItem("gofinance:token", token);
       localStorage.setItem("gofinance:user", JSON.stringify(user));
+      api.defaults.headers.authorization = "Bearer " + token;
 
       return {
         status: "success",
@@ -85,9 +97,12 @@ export const AuthProvider: React.FC = ({ children }) => {
       name: response.data.user.username,
       group: response.data.user.group,
       avatar: response.data.user.avatar,
+      id: response.data.user.id,
     };
     localStorage.setItem("gofinance:token", token);
     localStorage.setItem("gofinance:user", JSON.stringify(user));
+
+    api.defaults.headers.authorization = "Bearer " + token;
 
     setData({ token, user });
   }, []);
@@ -95,11 +110,34 @@ export const AuthProvider: React.FC = ({ children }) => {
   const signOut = useCallback(() => {
     localStorage.removeItem("gofinance:token");
     setData({} as AuthState);
+    api.defaults.headers = {};
   }, []);
+
+  const updateUser = useCallback(
+    (user: any) => {
+      const newUser = {
+        email: user.email,
+        name: user.username,
+        group: user.group,
+        avatar: user.avatar,
+        id: user.id,
+      };
+      localStorage.setItem("gofinance:user", JSON.stringify(newUser));
+      setData({ user: newUser, token: data.token });
+    },
+    [data]
+  );
 
   return (
     <AuthContext.Provider
-      value={{ token: data.token, signIn, signOut, signUp, user: data.user }}
+      value={{
+        token: data.token,
+        signIn,
+        signOut,
+        signUp,
+        user: data.user,
+        updateUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

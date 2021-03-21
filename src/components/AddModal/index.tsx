@@ -23,6 +23,7 @@ export const AddModal: React.FC<ModalData> = ({ isOpen, closeModal }) => {
       onRequestClose={closeModal}
       overlayClassName="react-modal-overlay"
       className="react-modal-content"
+      ariaHideApp={false}
     >
       <Container onSubmit={handleSubmitTransaction}>
         <h2>Cadastrar nova transação</h2>

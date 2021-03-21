@@ -1,4 +1,18 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const shimmer = keyframes`
+    0% {
+        background-position: right top;
+        opacity: 0.4;
+    }
+    50%{
+        opacity: 1;
+    }
+    100% {
+        background-position: left top;
+        opacity: 0.4;
+    }
+`;
 
 export const Container = styled.div`
   margin-top: 1rem;
@@ -6,6 +20,22 @@ export const Container = styled.div`
   table {
     width: 100%;
     border-spacing: 0 0.5rem;
+
+    .loading {
+      animation: ${shimmer} 0.7s ease infinite;
+      border-radius: 0.5rem !important;
+      height: 3.6rem;
+      background: linear-gradient(
+        270deg,
+        #1c1d3f 0%,
+        #1c1d3f 28.65%,
+        #282949 50.52%,
+        #1c1d3f 70.83%,
+        #1c1d3f 100%
+      );
+      background-size: 200% auto;
+      background-repeat: no-repeat;
+    }
 
     th {
       color: var(--text);

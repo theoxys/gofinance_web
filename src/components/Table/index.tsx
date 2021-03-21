@@ -1,6 +1,28 @@
 import { Container } from "./styled";
 
-export const Table: React.FC = () => {
+interface Userdata {
+  name: string;
+  avatar: string;
+}
+
+interface TransactionData {
+  title: string;
+  value: number;
+  type: string;
+  creator: Userdata;
+  date: string;
+}
+
+interface TableData {
+  data?: TransactionData[];
+  isLoading: boolean;
+}
+
+export const Table: React.FC<TableData> = ({ data, isLoading }) => {
+  if (isLoading) {
+    return <LoadingTable />;
+  }
+
   return (
     <Container>
       <table cellSpacing="0">
@@ -29,6 +51,28 @@ export const Table: React.FC = () => {
             <td className="deposit">R$ 12.000,00</td>
             <td>13/04/2021</td>
           </tr>
+        </tbody>
+      </table>
+    </Container>
+  );
+};
+
+const LoadingTable = () => {
+  const loaders = [1, 2, 3, 4, 5, 6, 7, 8];
+  return (
+    <Container>
+      <table>
+        <thead>
+          <tr>
+            <th>Carregando dados...</th>
+          </tr>
+        </thead>
+        <tbody>
+          {loaders.map((loader) => (
+            <tr key={loader}>
+              <td className="loading"></td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </Container>
