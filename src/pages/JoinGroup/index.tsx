@@ -4,8 +4,7 @@ import { FormEvent, useState } from "react";
 import { Disclaimer } from "../Login/styled";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { useAuth } from "../../hooks/useAuth";
-import { api } from "../../services/api";
-import { toast } from "react-toastify";
+import { joinGroup } from "../../services/groups";
 
 export const JoinGroupPage = () => {
   const [groupId, setGroupId] = useState("");
@@ -14,15 +13,9 @@ export const JoinGroupPage = () => {
 
   async function handleJoinGroup(event: FormEvent) {
     event.preventDefault();
-    const response = await api.get(`groups?group_id=${groupId}`);
-    try {
-      const newUser = await api.put(`users/${user.id}`, {
-        group: response.data[0].id,
-      });
-      updateUser(newUser.data);
-      toast.success(`Bem vindo ao grupo ${response.data.name}!`);
-    } catch (errorJoingroup) {
-      toast.error("Não foi possível encontrar o grupo 😔");
+    const response = await joinGroup(user.id, groupId);
+    if (response) {
+      updateUser(response);
     }
   }
 
