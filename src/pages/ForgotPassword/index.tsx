@@ -1,7 +1,6 @@
 import { Container, TextButton, AnimationBox } from "./styled";
 import LogoSvg from "../../assets/logo.svg";
 import { FormEvent, useState } from "react";
-import { ImGoogle3 } from "react-icons/im";
 import { Disclaimer } from "../Login/styled";
 
 export const ForgotPasswordPage = () => {
