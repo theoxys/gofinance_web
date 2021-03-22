@@ -13,8 +13,7 @@ interface CardData {
 }
 
 export const Card: React.FC<CardData> = ({ className, icon, title, value }) => {
-  //onst { loadingTransactions } = useTransaction();
-  let loadingTransactions = true;
+  const { loadingTransactions } = useTransaction();
   if (loadingTransactions) {
     return <CardLoading />;
   }
