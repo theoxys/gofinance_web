@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Container, Content, Capitalize } from "./styled";
 import LogoSvg from "../../assets/logo.svg";
 import { RiLogoutBoxLine } from "react-icons/ri";
@@ -8,10 +8,13 @@ import { RiGroupLine } from "react-icons/ri";
 import { VscCloseAll } from "react-icons/vsc";
 import ReactTooltip from "react-tooltip";
 import { useGroup } from "../../hooks/useGroups";
+import { ParticipantsModal } from "../ParticipantsModal";
 
 export const Header: React.FC = () => {
   const { signOut, user, updateUser } = useAuth();
   const { leaveGroup } = useGroup();
+
+  const [isParticipantsModalOpen, setIsParticipantsModalOpen] = useState(false);
 
   const handleLeaveGroup = useCallback(async () => {
     const newUser = await leaveGroup(user.id);
@@ -37,7 +40,11 @@ export const Header: React.FC = () => {
             <IoMdNotificationsOutline />
           </button>
 
-          <button className="icon-button" data-tip="Participantes do grupo">
+          <button
+            className="icon-button"
+            onClick={() => setIsParticipantsModalOpen(true)}
+            data-tip="Participantes do grupo"
+          >
             <RiGroupLine />
           </button>
 
@@ -56,6 +63,10 @@ export const Header: React.FC = () => {
         </main>
       </Content>
       <ReactTooltip place="bottom" />
+      <ParticipantsModal
+        isOpen={isParticipantsModalOpen}
+        closeModal={() => setIsParticipantsModalOpen(false)}
+      />
     </Container>
   );
 };

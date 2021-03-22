@@ -9,7 +9,7 @@ interface GroupData {
 }
 
 interface Participant {
-  name: string;
+  username: string;
   avatar: string | null;
   email: string;
   id: string;

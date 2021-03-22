@@ -55,8 +55,6 @@ export const Dashboard = () => {
 
   const userValue = amount?.userSlice! / 3 + totalPayments / 3;
 
-  console.log(amount?.userSlice);
-
   const Currency = new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
