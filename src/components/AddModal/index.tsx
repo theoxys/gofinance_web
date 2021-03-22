@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { FiArrowDownCircle, FiArrowUpCircle } from "react-icons/fi";
 import Modal from "react-modal";
 import { useAuth } from "../../hooks/useAuth";
+import { useGroup } from "../../hooks/useGroups";
 import { useTransaction } from "../../hooks/useTransactions";
 import { Container, RadioBox, TransactionType } from "./styled";
 
@@ -15,6 +16,7 @@ export const AddModal: React.FC<ModalData> = ({ isOpen, closeModal }) => {
   const [title, setTile] = useState("");
   const [value, setValue] = useState(0);
   const { user } = useAuth();
+  const { setNewAbsolutBalance, absoluteBalance } = useGroup();
   const { createTransaction } = useTransaction();
 
   const handleSubmitTransaction = useCallback(
@@ -27,12 +29,26 @@ export const AddModal: React.FC<ModalData> = ({ isOpen, closeModal }) => {
         userId: user.id,
         groupId: user.group?.id,
       });
+      const newAbsoluteValue =
+        activeType === "deposit"
+          ? absoluteBalance + value
+          : absoluteBalance - value;
+      await setNewAbsolutBalance(user.group?.id!, newAbsoluteValue);
       closeModal();
       setValue(0);
       setTile("");
       setActiveType("deposit");
     },
-    [title, value, activeType, user, createTransaction, closeModal]
+    [
+      title,
+      value,
+      activeType,
+      user,
+      createTransaction,
+      closeModal,
+      absoluteBalance,
+      setNewAbsolutBalance,
+    ]
   );
 
   return (

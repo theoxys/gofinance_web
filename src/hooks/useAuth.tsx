@@ -18,7 +18,7 @@ interface UserData {
   avatar?: string | null;
   id: string;
   payd_value: number;
-  quited_date: string;
+  user_balance: number;
 }
 interface AuthState {
   token: string;
@@ -36,7 +36,8 @@ interface ContextData {
   signOut(): void;
   signUp(credentials: any): Promise<ResponseData>;
   updateUser(credentials: any): void;
-  quiteUserValue(userId: string, value: number): Promise<void>;
+  quitUserValue(userId: string, value: number): Promise<void>;
+  setUserBalance(userId: string, balance: number): Promise<void>;
 }
 
 export const AuthContext = createContext<ContextData>({} as ContextData);
@@ -54,6 +55,18 @@ export const AuthProvider: React.FC = ({ children }) => {
     return {} as AuthState;
   });
 
+  const createUserData = (data: any) => {
+    return {
+      email: data.email,
+      name: data.username,
+      group: data.group,
+      avatar: data.avatar,
+      id: data.id,
+      payd_value: data.payd_value,
+      user_balance: data.user_balance,
+    };
+  };
+
   const signUp = useCallback(async ({ name, email, password }) => {
     try {
       const response = await api.post("auth/local/register", {
@@ -62,15 +75,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         password,
       });
 
-      const user = {
-        email: response.data.user.email,
-        name: response.data.user.username,
-        group: response.data.user.group,
-        avatar: response.data.user.avatar,
-        id: response.data.user.id,
-        payd_value: response.data.user.payd_value,
-        quited_date: response.data.user.quited_date,
-      };
+      const user = createUserData(response.data.user);
       const token = response.data.jwt;
       setData({ token: token, user: user });
 
@@ -97,15 +102,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     });
 
     const token = response.data.jwt;
-    const user = {
-      email: response.data.user.email,
-      name: response.data.user.username,
-      group: response.data.user.group,
-      avatar: response.data.user.avatar,
-      id: response.data.user.id,
-      payd_value: response.data.user.payd_value,
-      quited_date: response.data.user.quited_date,
-    };
+    const user = createUserData(response.data.user);
     localStorage.setItem("gofinance:token", token);
     localStorage.setItem("gofinance:user", JSON.stringify(user));
 
@@ -123,36 +120,31 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const updateUser = useCallback(
     (user: any) => {
-      const newUser = {
-        email: user.email,
-        name: user.username,
-        group: user.group,
-        avatar: user.avatar,
-        id: user.id,
-        payd_value: user.payd_value,
-        quited_date: user.quited_date,
-      };
+      const newUser = createUserData(user);
       localStorage.setItem("gofinance:user", JSON.stringify(newUser));
       setData({ user: newUser, token: data.token });
     },
     [data]
   );
 
-  const quiteUserValue = useCallback(
+  const quitUserValue = useCallback(
     async (userId: string, value: number) => {
       const response = await api.put(`users/${userId}`, {
-        quited_date: Date.now().toString(),
         payd_value: value,
       });
-      const user = {
-        email: response.data.email,
-        name: response.data.username,
-        group: response.data.group,
-        avatar: response.data.avatar,
-        id: response.data.id,
-        payd_value: response.data.payd_value,
-        quited_date: response.data.quited_date,
-      };
+      const user = createUserData(response.data);
+      localStorage.setItem("gofinance:user", JSON.stringify(user));
+      setData({ user, token: data.token });
+    },
+    [data]
+  );
+
+  const setUserBalance = useCallback(
+    async (userId: string, balance: number) => {
+      const response = await api.post(`users/${userId}`, {
+        user_balance: balance,
+      });
+      const user = createUserData(response.data);
       localStorage.setItem("gofinance:user", JSON.stringify(user));
       setData({ user, token: data.token });
     },
@@ -168,7 +160,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         signUp,
         user: data.user,
         updateUser,
-        quiteUserValue,
+        quitUserValue,
+        setUserBalance,
       }}
     >
       {children}

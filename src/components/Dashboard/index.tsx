@@ -6,14 +6,13 @@ import { useCallback, useState } from "react";
 import { useTransaction } from "../../hooks/useTransactions";
 import { useGroup } from "../../hooks/useGroups";
 import { useAuth } from "../../hooks/useAuth";
-import moment from "moment";
 import { toast } from "react-toastify";
 
 export const Dashboard = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const { transactions, createTransaction } = useTransaction();
-  const { participants } = useGroup();
-  const { user, quiteUserValue } = useAuth();
+  const { participants, absoluteBalance } = useGroup();
+  const { user, quitUserValue } = useAuth();
 
   const handleOpenAddModal = useCallback(() => {
     setIsAddModalOpen(true);
@@ -28,32 +27,16 @@ export const Dashboard = () => {
       if (transaction.type === "deposit") {
         acc.deposits += transaction.value;
         acc.balance += transaction.value;
-        if (moment(transaction.created_at).diff(user.quited_date) > 0) {
-          acc.userSlice += transaction.value;
-        }
       } else {
         acc.withdraws += transaction.value;
         acc.balance -= transaction.value;
-        if (moment(transaction.created_at).diff(user.quited_date) > 0) {
-          acc.userSlice -= transaction.value;
-        }
       }
       return acc;
     },
     { deposits: 0, withdraws: 0, balance: 0, userSlice: 0 }
   );
 
-  const totalPayments = participants.reduce((payment, participant) => {
-    if (
-      participant.id !== user.id &&
-      moment(user.payd_value).diff(participant.quited_date) > 0
-    ) {
-      return (payment += participant.payd_value);
-    }
-    return payment;
-  }, 0);
-
-  const userValue = amount?.userSlice! / 3 + totalPayments / 3;
+  const userValue = absoluteBalance / participants.length + user.payd_value;
 
   const Currency = new Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -61,20 +44,18 @@ export const Dashboard = () => {
   });
 
   const handleQuitUserValue = useCallback(async () => {
+    console.log(Math.abs(userValue));
     await createTransaction({
-      title:
-        amount?.userSlice! > 0
-          ? `${user.name} - Retirou`
-          : `${user.name} - Pagou`,
+      title: userValue > 0 ? `${user.name} - Retirou` : `${user.name} - Pagou`,
       value: Math.abs(userValue),
-      type: amount?.userSlice! > 0 ? "withdraw" : "deposit",
+      type: userValue > 0 ? "withdraw" : "deposit",
       userId: user.id,
       groupId: user.group?.id,
     });
-    await quiteUserValue(user.id, userValue);
+    await quitUserValue(user.id, userValue * -1);
 
     toast.success("Você quitou suas pendencias!");
-  }, [createTransaction, user, amount, quiteUserValue, userValue]);
+  }, [createTransaction, user, quitUserValue, userValue]);
 
   return (
     <Container>
