@@ -50,10 +50,12 @@ export const AddModal: React.FC<ModalData> = ({ isOpen, closeModal }) => {
           onChange={(e) => setTile(e.target.value)}
         />
         <input
+          step="0.01"
           type="number"
           placeholder="Valor"
           value={value}
           onChange={(e) => setValue(Number(e.target.value))}
+          onFocus={(e) => e.target.select()}
         />
 
         <TransactionType>

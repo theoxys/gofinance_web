@@ -13,6 +13,11 @@ export const Container = styled.form`
 
     border-radius: 0.5rem;
     margin-bottom: 1rem;
+    background-color: var(--background);
+    color: var(--text);
+    &::placeholder {
+      color: var(--text);
+    }
   }
 
   button[type="submit"] {

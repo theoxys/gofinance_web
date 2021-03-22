@@ -19,6 +19,12 @@ export const Container = styled.form`
 
     border-radius: 0.5rem;
     margin-bottom: 1rem;
+
+    background-color: var(--background);
+    color: var(--text);
+    &::placeholder {
+      color: var(--text);
+    }
   }
 
   button[type="submit"] {
@@ -29,7 +35,7 @@ export const Container = styled.form`
     color: var(--text);
     font-weight: 600;
     transition: all ease 0.2s;
-    margin-top: 1rem;
+    margin-top: 3rem;
 
     &:hover {
       filter: brightness(0.9);
@@ -50,16 +56,20 @@ export const RadioBox = styled.button<RadioBoxData>`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid ${(props) => (props.isActive ? props.color : "white")};
+  border: 2px solid
+    ${(props) => (props.isActive ? props.color : "var(--background)")};
   transition: all ease 0.1s;
   background-color: ${(props) =>
-    props.isActive ? transparentize(0.5, props.color) : "white"};
+    props.isActive ? transparentize(0.9, props.color) : "var(--background)"};
   outline: transparent;
-  color: ${(props) => (props.isActive ? "white" : "#000")};
+  color: var(--text);
+
+  svg {
+    color: ${(props) => props.color};
+  }
 
   &:hover {
-    border: 2px solid
-      ${(props) => (props.isActive ? props.color : "rgba(0,0,0,0.2)")};
+    border: 2px solid ${(props) => props.color};
   }
 
   svg {

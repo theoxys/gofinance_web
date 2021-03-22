@@ -4,13 +4,15 @@ import { FormEvent, useState } from "react";
 import { Disclaimer } from "../Login/styled";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { useAuth } from "../../hooks/useAuth";
-import { joinGroup } from "../../services/groups";
 import { CreateGroupModal } from "../../components/CreateGroupModal";
+import { useGroup } from "../../hooks/useGroups";
 
 export const JoinGroupPage = () => {
   const [groupId, setGroupId] = useState("");
 
   const [isCreateGroupModalOpen, setIsCreateGroupModalOpen] = useState(false);
+
+  const { joinGroup } = useGroup();
 
   const handleToggleModal = () =>
     setIsCreateGroupModalOpen(!isCreateGroupModalOpen);

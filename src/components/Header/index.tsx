@@ -6,15 +6,17 @@ import { useAuth } from "../../hooks/useAuth";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { RiGroupLine } from "react-icons/ri";
 import { VscCloseAll } from "react-icons/vsc";
-import { leaveGroup } from "../../services/groups";
+import ReactTooltip from "react-tooltip";
+import { useGroup } from "../../hooks/useGroups";
 
 export const Header: React.FC = () => {
   const { signOut, user, updateUser } = useAuth();
+  const { leaveGroup } = useGroup();
 
   const handleLeaveGroup = useCallback(async () => {
     const newUser = await leaveGroup(user.id);
     updateUser(newUser);
-  }, [user, updateUser]);
+  }, [user, updateUser, leaveGroup]);
 
   return (
     <Container>
@@ -22,20 +24,24 @@ export const Header: React.FC = () => {
         <section>
           <img src={LogoSvg} alt="GoFinance" />
           <h2>{user.group?.name}</h2>
-          <button className="icon-button" onClick={handleLeaveGroup}>
+          <button
+            className="icon-button"
+            onClick={handleLeaveGroup}
+            data-tip="Sair do grupo"
+          >
             <VscCloseAll />
           </button>
         </section>
         <main>
-          <button className="icon-button">
+          <button className="icon-button" data-tip="Notificações">
             <IoMdNotificationsOutline />
           </button>
 
-          <button className="icon-button">
+          <button className="icon-button" data-tip="Participantes do grupo">
             <RiGroupLine />
           </button>
 
-          <button className="icon-button" onClick={signOut}>
+          <button className="icon-button" onClick={signOut} data-tip="Logout">
             <RiLogoutBoxLine />
           </button>
 
@@ -49,6 +55,7 @@ export const Header: React.FC = () => {
           </button>
         </main>
       </Content>
+      <ReactTooltip place="bottom" />
     </Container>
   );
 };

@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import Modal from "react-modal";
 import { useAuth } from "../../hooks/useAuth";
-import { createGroup } from "../../services/groups";
+import { useGroup } from "../../hooks/useGroups";
 import { Container } from "./styled";
 
 interface ModalData {
@@ -17,6 +17,8 @@ export const CreateGroupModal: React.FC<ModalData> = ({
   const [groupId, setGroupId] = useState("");
   const { user, updateUser } = useAuth();
 
+  const { createGroup } = useGroup();
+
   const handleCreateGroup = useCallback(
     async (event) => {
       event.preventDefault();
@@ -28,7 +30,7 @@ export const CreateGroupModal: React.FC<ModalData> = ({
       updateUser(newUserData);
       closeModal();
     },
-    [user, name, groupId, updateUser, closeModal]
+    [user, name, groupId, updateUser, closeModal, createGroup]
   );
 
   return (

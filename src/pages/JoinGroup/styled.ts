@@ -46,6 +46,11 @@ export const Container = styled.div`
       border-radius: 0.5rem;
       color: var(--box);
       margin-bottom: 1rem;
+      background-color: var(--background);
+      color: var(--text);
+      &::placeholder {
+        color: var(--text);
+      }
     }
 
     .login {
