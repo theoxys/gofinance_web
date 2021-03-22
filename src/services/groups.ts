@@ -22,7 +22,8 @@ export async function joinGroup(userId: string, groupId: string) {
     const newUser = await api.put(`users/${userId}`, {
       group: response.data[0].id,
     });
-    toast.success(`Bem vindo ao grupo ${response.data.name}!`);
+    console.log(response);
+    toast.success(`Bem vindo ao grupo ${response.data[0].name}!`);
     return newUser.data;
   } catch (errorJoingroup) {
     toast.error("Não foi possível encontrar o grupo 😔");

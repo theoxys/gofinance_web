@@ -1,6 +1,8 @@
 import { useCallback, useState } from "react";
 import { FiArrowDownCircle, FiArrowUpCircle } from "react-icons/fi";
 import Modal from "react-modal";
+import { useAuth } from "../../hooks/useAuth";
+import { useTransaction } from "../../hooks/useTransactions";
 import { Container, RadioBox, TransactionType } from "./styled";
 
 interface ModalData {
@@ -12,10 +14,23 @@ export const AddModal: React.FC<ModalData> = ({ isOpen, closeModal }) => {
   const [activeType, setActiveType] = useState("deposit");
   const [title, setTile] = useState("");
   const [value, setValue] = useState(0);
+  const { user } = useAuth();
+  const { createTransaction } = useTransaction();
 
-  const handleSubmitTransaction = useCallback((event) => {
-    event.preventDefault();
-  }, []);
+  const handleSubmitTransaction = useCallback(
+    async (event) => {
+      event.preventDefault();
+      await createTransaction({
+        title,
+        value,
+        type: activeType,
+        userId: user.id,
+        groupId: user.group?.id,
+      });
+      closeModal();
+    },
+    [title, value, activeType, user, createTransaction, closeModal]
+  );
 
   return (
     <Modal

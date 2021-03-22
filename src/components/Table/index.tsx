@@ -1,3 +1,4 @@
+import { useTransaction } from "../../hooks/useTransactions";
 import { Container } from "./styled";
 
 interface Userdata {
@@ -19,6 +20,8 @@ interface TableData {
 }
 
 export const Table: React.FC<TableData> = ({ data, isLoading }) => {
+  const { transactions } = useTransaction();
+
   if (isLoading) {
     return <LoadingTable />;
   }
@@ -34,23 +37,13 @@ export const Table: React.FC<TableData> = ({ data, isLoading }) => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Desenvolvimento de Website</td>
-            <td className="deposit">R$ 12.000,00</td>
-            <td>13/04/2021</td>
-          </tr>
-
-          <tr>
-            <td>Desenvolvimento de Website</td>
-            <td className="withdraw">R$ 12.000,00</td>
-            <td>13/04/2021</td>
-          </tr>
-
-          <tr>
-            <td>Desenvolvimento de Website</td>
-            <td className="deposit">R$ 12.000,00</td>
-            <td>13/04/2021</td>
-          </tr>
+          {transactions?.map((transaction, index) => (
+            <tr key={index}>
+              <td>{transaction.title}</td>
+              <td className={transaction.type}>{transaction.value}</td>
+              <td>{transaction.created_at}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </Container>
