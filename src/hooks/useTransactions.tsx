@@ -1,13 +1,6 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { api } from "../services/api";
-import { useAuth } from "./useAuth";
 
 interface TransactionData {
   title: string;
@@ -28,7 +21,6 @@ interface ContextData {
 export const TransactionContext = createContext<ContextData>({} as ContextData);
 
 export const TransactionProvider: React.FC = ({ children }) => {
-  const { user } = useAuth();
   const [transactions, setTransaction] = useState<TransactionData[]>();
   const [loadingTransactions, setLoadingTransactions] = useState(true);
 
