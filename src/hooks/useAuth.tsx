@@ -17,6 +17,8 @@ interface UserData {
   group: GroupData | null;
   avatar?: string | null;
   id: string;
+  payd_value: number;
+  quited_date: string;
 }
 interface AuthState {
   token: string;
@@ -34,6 +36,7 @@ interface ContextData {
   signOut(): void;
   signUp(credentials: any): Promise<ResponseData>;
   updateUser(credentials: any): void;
+  quiteUserValue(userId: string, value: number): Promise<void>;
 }
 
 export const AuthContext = createContext<ContextData>({} as ContextData);
@@ -65,6 +68,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         group: response.data.user.group,
         avatar: response.data.user.avatar,
         id: response.data.user.id,
+        payd_value: response.data.user.payd_value,
+        quited_date: response.data.user.quited_date,
       };
       const token = response.data.jwt;
       setData({ token: token, user: user });
@@ -98,6 +103,8 @@ export const AuthProvider: React.FC = ({ children }) => {
       group: response.data.user.group,
       avatar: response.data.user.avatar,
       id: response.data.user.id,
+      payd_value: response.data.user.payd_value,
+      quited_date: response.data.user.quited_date,
     };
     localStorage.setItem("gofinance:token", token);
     localStorage.setItem("gofinance:user", JSON.stringify(user));
@@ -109,6 +116,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const signOut = useCallback(() => {
     localStorage.removeItem("gofinance:token");
+    localStorage.removeItem("gofinance:user");
     setData({} as AuthState);
     api.defaults.headers = {};
   }, []);
@@ -121,9 +129,32 @@ export const AuthProvider: React.FC = ({ children }) => {
         group: user.group,
         avatar: user.avatar,
         id: user.id,
+        payd_value: user.payd_value,
+        quited_date: user.quited_date,
       };
       localStorage.setItem("gofinance:user", JSON.stringify(newUser));
       setData({ user: newUser, token: data.token });
+    },
+    [data]
+  );
+
+  const quiteUserValue = useCallback(
+    async (userId: string, value: number) => {
+      const response = await api.put(`users/${userId}`, {
+        quited_date: Date.now().toString(),
+        payd_value: value,
+      });
+      const user = {
+        email: response.data.email,
+        name: response.data.username,
+        group: response.data.group,
+        avatar: response.data.avatar,
+        id: response.data.id,
+        payd_value: response.data.payd_value,
+        quited_date: response.data.quited_date,
+      };
+      localStorage.setItem("gofinance:user", JSON.stringify(user));
+      setData({ user, token: data.token });
     },
     [data]
   );
@@ -137,6 +168,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         signUp,
         user: data.user,
         updateUser,
+        quiteUserValue,
       }}
     >
       {children}

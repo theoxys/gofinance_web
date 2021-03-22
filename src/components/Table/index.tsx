@@ -1,5 +1,7 @@
 import { useTransaction } from "../../hooks/useTransactions";
 import { Container } from "./styled";
+import moment from "moment";
+import "moment/locale/pt-br";
 
 interface Userdata {
   name: string;
@@ -26,6 +28,11 @@ export const Table: React.FC<TableData> = ({ data, isLoading }) => {
     return <LoadingTable />;
   }
 
+  const Currency = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+
   return (
     <Container>
       <table cellSpacing="0">
@@ -40,8 +47,14 @@ export const Table: React.FC<TableData> = ({ data, isLoading }) => {
           {transactions?.map((transaction, index) => (
             <tr key={index}>
               <td>{transaction.title}</td>
-              <td className={transaction.type}>{transaction.value}</td>
-              <td>{transaction.created_at}</td>
+              <td className={transaction.type}>
+                {Currency.format(transaction.value)}
+              </td>
+              <td>
+                {moment(transaction.created_at).format(
+                  "DD [de] MMMM [às] hh:mm"
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

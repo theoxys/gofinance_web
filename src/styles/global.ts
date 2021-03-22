@@ -24,6 +24,7 @@ export const GlobalStyle = createGlobalStyle`
         --box: #1C1D3F;
 
         --red: #E52E4D;
+        --rgba-red: 229, 46, 77, 0.2;
         --green: #85CC9D;
         --rgba-green: 133, 204, 157, 0.2;
 

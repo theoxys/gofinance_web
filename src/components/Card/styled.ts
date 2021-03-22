@@ -11,10 +11,16 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: all ease 0.3s;
 
   &.positive {
     background-color: rgba(var(--rgba-green));
     border: 2px solid var(--green);
+  }
+
+  &.negative {
+    background-color: rgba(var(--rgba-red));
+    border: 2px solid var(--red);
   }
 
   &.deposit {

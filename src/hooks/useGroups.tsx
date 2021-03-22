@@ -13,6 +13,8 @@ interface Participant {
   avatar: string | null;
   email: string;
   id: string;
+  payd_value: number;
+  quited_date: string;
 }
 
 interface ContextData {
@@ -60,6 +62,8 @@ export const GroupProvider: React.FC = ({ children }) => {
       const response = await api.get(`groups?group_id=${groupId}`);
       const newUser = await api.put(`users/${userId}`, {
         group: response.data[0].id,
+        payd_value: 0,
+        quited_date: Date.now(),
       });
       toast.success(`Bem vindo ao grupo ${response.data[0].name}!`);
 
