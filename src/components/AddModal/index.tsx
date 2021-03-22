@@ -28,6 +28,9 @@ export const AddModal: React.FC<ModalData> = ({ isOpen, closeModal }) => {
         groupId: user.group?.id,
       });
       closeModal();
+      setValue(0);
+      setTile("");
+      setActiveType("deposit");
     },
     [title, value, activeType, user, createTransaction, closeModal]
   );

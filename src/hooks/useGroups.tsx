@@ -61,7 +61,6 @@ export const GroupProvider: React.FC = ({ children }) => {
       const newUser = await api.put(`users/${userId}`, {
         group: response.data[0].id,
       });
-      console.log(response);
       toast.success(`Bem vindo ao grupo ${response.data[0].name}!`);
 
       setGroup(response.data[0]);

@@ -41,6 +41,6 @@ export const Container = styled.div`
   }
 
   strong {
-    font-size: 2rem;
+    font-size: 1.7rem;
   }
 `;

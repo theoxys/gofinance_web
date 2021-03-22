@@ -8,16 +8,17 @@ interface CardData {
   icon?: IconType;
   type?: string;
   title: string;
+  value?: string;
 }
 
-export const Card: React.FC<CardData> = ({ className, icon, title }) => {
+export const Card: React.FC<CardData> = ({ className, icon, title, value }) => {
   return (
     <Container className={className}>
       <header>
         <span>{title}</span>
         {icon ? React.createElement(icon) : <FiDollarSign />}
       </header>
-      <strong>R$ 17.000,00</strong>
+      <strong>{value}</strong>
     </Container>
   );
 };
