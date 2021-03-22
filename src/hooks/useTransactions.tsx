@@ -29,7 +29,7 @@ export const TransactionContext = createContext<ContextData>({} as ContextData);
 
 export const TransactionProvider: React.FC = ({ children }) => {
   const { user } = useAuth();
-  const [transactions, setTransaction] = useState<TransactionData[]>([]);
+  const [transactions, setTransaction] = useState<TransactionData[]>();
   const [loadingTransactions, setLoadingTransactions] = useState(true);
 
   const getTransactions = useCallback(async (groupId) => {
@@ -63,12 +63,6 @@ export const TransactionProvider: React.FC = ({ children }) => {
     },
     [getTransactions]
   );
-
-  useEffect(() => {
-    if (user.group) {
-      getTransactions(user.group.id);
-    }
-  }, [getTransactions, user]);
 
   return (
     <TransactionContext.Provider
