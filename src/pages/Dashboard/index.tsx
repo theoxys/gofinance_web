@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Dashboard } from "../../components/Dashboard";
 import { Header } from "../../components/Header";
 import { Table } from "../../components/Table";

@@ -32,6 +32,19 @@ export const TransactionProvider: React.FC = ({ children }) => {
   const [transactions, setTransaction] = useState<TransactionData[]>([]);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
 
+  const getTransactions = useCallback(async (groupId) => {
+    setLoadingTransactions(true);
+    try {
+      const transaction = await api.get(`transactions?group=${groupId}`);
+      setTransaction(transaction.data);
+      setLoadingTransactions(false);
+    } catch (error) {
+      toast.error(
+        "Não foi possível sincronizar as transações do grupo, tente novamente mais tarde!"
+      );
+    }
+  }, []);
+
   const createTransaction = useCallback(
     async ({ title, value, type, userId, groupId }) => {
       try {
@@ -48,21 +61,8 @@ export const TransactionProvider: React.FC = ({ children }) => {
         toast.error("Erro ao cadastrar transação!");
       }
     },
-    []
+    [getTransactions]
   );
-
-  const getTransactions = useCallback(async (groupId) => {
-    setLoadingTransactions(true);
-    try {
-      const transaction = await api.get(`transactions?group=${groupId}`);
-      setTransaction(transaction.data);
-      setLoadingTransactions(false);
-    } catch (error) {
-      toast.error(
-        "Não foi possível sincronizar as transações do grupo, tente novamente mais tarde!"
-      );
-    }
-  }, []);
 
   useEffect(() => {
     if (user.group) {
