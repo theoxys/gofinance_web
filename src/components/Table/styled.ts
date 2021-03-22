@@ -22,7 +22,7 @@ export const Container = styled.div`
     border-spacing: 0 0.5rem;
 
     .loading {
-      animation: ${shimmer} 0.7s ease infinite;
+      animation: ${shimmer} 1.2s ease infinite;
       border-radius: 0.5rem !important;
       height: 3.6rem;
       background: linear-gradient(
@@ -33,7 +33,7 @@ export const Container = styled.div`
         #1c1d3f 70.83%,
         #1c1d3f 100%
       );
-      background-size: 200% auto;
+      background-size: 300% auto;
       background-repeat: no-repeat;
     }
 
