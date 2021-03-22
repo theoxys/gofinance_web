@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
 const FadeUp = keyframes`
@@ -96,7 +95,7 @@ export const Container = styled.div`
   }
 `;
 
-export const TextButton = styled(Link)`
+export const TextButton = styled.button`
   height: fit-content;
   color: var(--text);
   width: 85%;

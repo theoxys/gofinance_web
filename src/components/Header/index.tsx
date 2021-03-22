@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Container, Content, Capitalize } from "./styled";
 import LogoSvg from "../../assets/logo.svg";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { useAuth } from "../../hooks/useAuth";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { RiGroupLine } from "react-icons/ri";
+import { VscCloseAll } from "react-icons/vsc";
+import { leaveGroup } from "../../services/groups";
 
 export const Header: React.FC = () => {
-  const { signOut, user } = useAuth();
+  const { signOut, user, updateUser } = useAuth();
+
+  const handleLeaveGroup = useCallback(async () => {
+    const newUser = await leaveGroup(user.id);
+    updateUser(newUser);
+  }, [user, updateUser]);
 
   return (
     <Container>
@@ -15,6 +22,9 @@ export const Header: React.FC = () => {
         <section>
           <img src={LogoSvg} alt="GoFinance" />
           <h2>{user.group?.name}</h2>
+          <button className="icon-button" onClick={handleLeaveGroup}>
+            <VscCloseAll />
+          </button>
         </section>
         <main>
           <button className="icon-button">

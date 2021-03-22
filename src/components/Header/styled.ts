@@ -17,6 +17,10 @@ export const Content = styled.div`
     align-items: center;
     justify-content: center;
 
+    button {
+      margin-left: 1rem;
+    }
+
     h2 {
       margin-left: 1rem;
       padding-left: 1rem;

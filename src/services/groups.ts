@@ -49,9 +49,9 @@ export async function createGroup({ name, group_id, userId }: GroupData) {
       participants: [userId],
     });
 
-    const newUser = api.get(`users/${userId}`);
+    const newUser = await api.get(`users/${userId}`);
     toast.success("Grupo cirado com sucesso!");
-    return (await newUser).data;
+    return newUser.data;
   } catch (error) {
     toast.error("Erro ao criar grupo, tente usar um ID diferente!");
   }

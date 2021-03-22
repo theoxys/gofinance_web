@@ -5,9 +5,15 @@ import { Disclaimer } from "../Login/styled";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { useAuth } from "../../hooks/useAuth";
 import { joinGroup } from "../../services/groups";
+import { CreateGroupModal } from "../../components/CreateGroupModal";
 
 export const JoinGroupPage = () => {
   const [groupId, setGroupId] = useState("");
+
+  const [isCreateGroupModalOpen, setIsCreateGroupModalOpen] = useState(false);
+
+  const handleToggleModal = () =>
+    setIsCreateGroupModalOpen(!isCreateGroupModalOpen);
 
   const { signOut, user, updateUser } = useAuth();
 
@@ -27,7 +33,7 @@ export const JoinGroupPage = () => {
           <h2>Você ainda não pertenca a nenhum grupo!</h2>
           <span>
             Crie seu próprio grupo de finanças ou entre em algum existente
-            digitanto o ID no campo acima!
+            digitanto o ID no campo abaixo!
           </span>
           <input
             type="text"
@@ -37,13 +43,19 @@ export const JoinGroupPage = () => {
           />
 
           <button className="login">Entrar no grupo!</button>
-          <TextButton to="/login">Quero criar meu próprio grupo!</TextButton>
+          <TextButton type="button" onClick={handleToggleModal}>
+            Quero criar meu próprio grupo!
+          </TextButton>
         </AnimationBox>
       </form>
-      <LogoutButton onClick={signOut}>
+      <LogoutButton type="button" onClick={signOut}>
         <RiLogoutBoxLine />
         Sair
       </LogoutButton>
+      <CreateGroupModal
+        isOpen={isCreateGroupModalOpen}
+        closeModal={handleToggleModal}
+      />
       <Disclaimer>
         Feito com 💚 por{" "}
         <a href="https://www.linkedin.com/in/matheusfpires/">Matheus Pires</a>
